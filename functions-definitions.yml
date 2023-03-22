@@ -1,0 +1,42 @@
+Registration:
+  handler: ./handlers/Registration.handler
+  name: Registration
+  events:
+  - http:
+      path: Registration
+      method: post
+SendWelcomeEmail:
+  handler: ./handlers/SendWelcomeEmail.handler
+  name: SendWelcomeEmail
+  events:
+  - http:
+      path: SendWelcomeEmail
+      method: post
+Waitfor3Days:
+  handler: ./handlers/Waitfor3Days.handler
+  name: Waitfor3Days
+  events:
+  - http:
+      path: Waitfor3Days
+      method: post
+CheckActivation:
+  handler: ./handlers/CheckActivation.handler
+  name: CheckActivation
+  events:
+  - http:
+      path: CheckActivation
+      method: post
+Active:
+  handler: ./handlers/Active.handler
+  name: Active
+  events:
+  - http:
+      path: Active
+      method: post
+Inactive:
+  handler: ./handlers/Inactive.handler
+  name: Inactive
+  events:
+  - http:
+      path: Inactive
+      method: post

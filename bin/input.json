@@ -1,0 +1,76 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "id": "1",
+        "type": "input",
+        "data": { "label": "Registration" },
+        "position": { "x": 400, "y": 50 }
+      },
+      {
+        "id": "2",
+        "type": "default",
+        "data": { "label": "Send Welcome Email" },
+        "position": { "x": 400, "y": 150 }
+      },
+      {
+        "id": "3",
+        "type": "default",
+        "data": { "label": "Wait for 3 Days" },
+        "position": { "x": 400, "y": 250 }
+      },
+      {
+        "id": "4",
+        "type": "default",
+        "data": { "label": "Check Activation" },
+        "position": { "x": 400, "y": 350 }
+      },
+      {
+        "id": "5",
+        "type": "output",
+        "data": { "label": "Active" },
+        "position": { "x": 300, "y": 450 }
+      },
+      {
+        "id": "6",
+        "type": "output",
+        "data": { "label": "Inactive" },
+        "position": { "x": 500, "y": 450 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1-2",
+        "source": "1",
+        "target": "2",
+        "animated": false
+      },
+      {
+        "id": "e2-3",
+        "source": "2",
+        "target": "3",
+        "animated": false
+      },
+      {
+        "id": "e3-4",
+        "source": "3",
+        "target": "4",
+        "animated": false
+      },
+      {
+        "id": "e4-5",
+        "source": "4",
+        "target": "5",
+        "animated": false,
+        "label": "Activated"
+      },
+      {
+        "id": "e4-6",
+        "source": "4",
+        "target": "6",
+        "animated": false,
+        "label": "Not Activated"
+      }
+    ]
+  }
+}

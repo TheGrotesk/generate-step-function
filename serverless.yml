@@ -1,0 +1,17 @@
+service: step-functions
+frameworkVersion: '3'
+
+plugins:
+  - serverless-step-functions
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+
+stepFunctions:
+  stateMachines:
+    main-workflow:
+      definition: ${file('./step-function-definition.yml')}
+          
+functions: ${file('./functions-definitions.yml')}
