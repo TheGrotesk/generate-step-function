@@ -7,7 +7,6 @@ const validateEnvAndArgs = () => {
   if (!process.env.AWS_ACCOUNT_ID) throw new Error('No AWS_ACCOUNT_ID specified in env');
 };
 
-// read file from disk, filepath from console argument
 const inputFileContent = fs.readFileSync(process.argv[2], 'utf8').toString();
 const inputJson = JSON.parse(inputFileContent);
 
@@ -29,7 +28,9 @@ const generateStepFunctionAndLambdas = (json) => {
   const lambdaArn = `arn:aws:lambda:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT_ID}:function:`;
 
   nodes.forEach((node) => {
-    const label = node.data.label.replace(/ /g, '');
+    const label = node.data.label.replace(/\s/g, '');
+
+    node.data.label = label;
 
     lambdaFunctions[label] = {
       handler: `${path}${label}.handler`,
@@ -44,25 +45,28 @@ const generateStepFunctionAndLambdas = (json) => {
       ]
     };
 
+    const target = node.type !== 'output' ? edges.find((edge) => edge.source === node.id).target : 0;
+    const next = node.type !== 'output' ?  nodes.find(node => node.id === target).data.label.replace(/\s/g, '') : 0;
+
     switch (node.type) {
       case 'input':
-        stateMachine.StartAt = node.id;
-        stateMachine.States[node.id] = {
+        stateMachine.StartAt = label;
+        stateMachine.States[label] = {
           Type: 'Task',
           Resource: lambdaArn + label,
-          Next: edges.find((edge) => edge.source === node.id).target,
+          Next: next,
         };
         break;
       case 'default':
-        stateMachine.States[node.id] = {
+        stateMachine.States[label] = {
           Type: 'Task',
           Resource: lambdaArn + label,
-          Next: edges.find((edge) => edge.source === node.id).target,
+          Next: next,
         };
         break;
       case 'output':
-        stateMachine.States[node.id] = {
-          Type: 'Succeed',
+        stateMachine.States[label] = {
+          Type: 'Succeed'
         };
         break;
     }
@@ -70,7 +74,10 @@ const generateStepFunctionAndLambdas = (json) => {
 
   edges.forEach((edge) => {
     if (edge.label) {
-      const state = stateMachine.States[edge.source];
+      const source = nodes.find(node => node.id === edge.source).data.label;
+      const target = nodes.find(node => node.id === edge.target).data.label;
+
+      const state = stateMachine.States[source];
       if (!state.Choices) {
         state.Type = 'Choice';
         state.Choices = [];
@@ -81,7 +88,7 @@ const generateStepFunctionAndLambdas = (json) => {
       state.Choices.push({
         Variable: '$.result',
         StringEquals: edge.label,
-        Next: edge.target,
+        Next: target,
       });
     }
   });

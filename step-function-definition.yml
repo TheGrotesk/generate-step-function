@@ -1,27 +1,27 @@
-StartAt: '1'
+StartAt: Registration
 States:
-  '1':
+  Registration:
     Type: Task
     Resource: arn:aws:lambda:eu-central-1:926702850896:function:Registration
-    Next: '2'
-  '2':
+    Next: SendWelcomeEmail
+  SendWelcomeEmail:
     Type: Task
     Resource: arn:aws:lambda:eu-central-1:926702850896:function:SendWelcomeEmail
-    Next: '3'
-  '3':
+    Next: Waitfor3Days
+  Waitfor3Days:
     Type: Task
     Resource: arn:aws:lambda:eu-central-1:926702850896:function:Waitfor3Days
-    Next: '4'
-  '4':
+    Next: CheckActivation
+  CheckActivation:
     Type: Choice
     Choices:
       - Variable: $.result
         StringEquals: Activated
-        Next: '5'
+        Next: Active
       - Variable: $.result
         StringEquals: Not Activated
-        Next: '6'
-  '5':
+        Next: Inactive
+  Active:
     Type: Succeed
-  '6':
+  Inactive:
     Type: Succeed
